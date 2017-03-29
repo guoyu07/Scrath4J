@@ -15,7 +15,7 @@ public class DefaultParserImpl implements IParser {
         defaultVo.setRequest(request.toString());
         defaultVo.setContent(response.getResponseContent());
 
-        item.addSubRequest(new SimpleHttpRequestImpl().setURL("http://timd.cn/"));
+        // item.addSubRequest(new SimpleHttpRequestImpl().setURL("http://timd.cn/"));
         return item.addItem(defaultVo);
     }
 }
