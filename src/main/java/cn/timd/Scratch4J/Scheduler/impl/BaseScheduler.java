@@ -1,6 +1,7 @@
 package cn.timd.Scratch4J.Scheduler.impl;
 
 import cn.timd.Scratch4J.Downloader.IDownloader;
+import cn.timd.Scratch4J.Facade.IFacade;
 import cn.timd.Scratch4J.Item.IItem;
 import cn.timd.Scratch4J.Parser.IParser;
 import cn.timd.Scratch4J.PipeLine.IPipeLine;
@@ -28,8 +29,8 @@ public class BaseScheduler implements IScheduler {
 
     private void mainWorkFlow(IRequest request)
             throws IllegalAccessException, InstantiationException {
-        Class<?> downloader = request.getDownloader();
-        IResponse response = ((IDownloader)downloader.newInstance()).download(request);
+        Class<? extends IDownloader> downloader = request.getDownloader();
+        IResponse response = downloader.newInstance().download(request);
         if (!response.isSuccessful()) {
             request.incrementFailureCount();
             if (response.isRetry())
@@ -37,13 +38,18 @@ public class BaseScheduler implements IScheduler {
             return;
         }
 
-        Class<? extends IParser> parserClass = strategy.getFacade().getParserClass(request, response);
+        IFacade facade = strategy.getFacade();
+        Class<? extends IParser> parserClass = facade.getParserClass(request, response);
         IItem item = parserClass.newInstance().parse(request, response);
 
-        for (IRequest subRequest: item.getSubRequests())
-            submitRequest(subRequest);
+        for (IRequest subRequest: item.getSubRequests()) {
+            if (subRequest.getDownloader() == null)
+                subRequest.setDownloader(request.getDownloader());
+            submitRequest(subRequest.setDepth(request.getDepth() + 1));
+        }
 
-        Class<? extends IPipeLine> pipeLineClass = strategy.getFacade().getPipeLine(request, response);
+        Class<? extends IPipeLine> pipeLineClass = facade.getPipeLineClass(
+                request, response, item.getItems());
         pipeLineClass.newInstance().pipeLine(request, response, item.getItems());
     }
 

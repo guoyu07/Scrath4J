@@ -15,8 +15,7 @@ public class SimpleHttpDownloaderImpl implements IDownloader {
     private static final OkHttpClient client = new OkHttpClient();
 
     static {
-        // // TODO: 2017/3/28 set cookies and cache, in order to keep session
-        // // TODO: 2017/3/28 set timeout also
+        //// TODO: 2017/3/29 configure `client` such as cookie, cache, timeout and so on
     }
 
     private void convertResponse(Response okHttpResponse, IHttpResponse httpResponse)
@@ -26,7 +25,7 @@ public class SimpleHttpDownloaderImpl implements IDownloader {
 
         Headers headers = okHttpResponse.headers();
         for (String header: headers.names())
-            httpResponse.setHeader(header, headers.get(header));
+            httpResponse.addHeader(header, headers.get(header));
 
         httpResponse.setResponseContent(okHttpResponse.body().bytes());
 
@@ -72,7 +71,7 @@ public class SimpleHttpDownloaderImpl implements IDownloader {
             Response okHttpResponse = call.execute();
             convertResponse(okHttpResponse, httpResponse);
         } catch (IOException ex) {
-            httpResponse.setException(ex.getClass()).markAsFailure().setRetry(true);
+            httpResponse.setException(ex).markAsFailure().setRetry(true);
         }
 
         return httpResponse;

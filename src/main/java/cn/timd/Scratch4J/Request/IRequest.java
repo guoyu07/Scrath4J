@@ -13,5 +13,5 @@ public interface IRequest {
     IRequest setDepth(int depth);
 
     IRequest setDownloader(Class<? extends IDownloader> downloader);
-    Class<?> getDownloader();
+    Class<? extends IDownloader> getDownloader();
 }

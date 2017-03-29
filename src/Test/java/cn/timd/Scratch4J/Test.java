@@ -10,8 +10,7 @@ import cn.timd.Scratch4J.Strategy.AbstractStrategy;
 public class Test {
     @org.junit.Test
     public void test() throws Exception {
-        IScheduler scheduler = new BaseScheduler();
-        scheduler.configure(new AbstractStrategy() {});
+        IScheduler scheduler = new BaseScheduler().configure(new AbstractStrategy() {});
         IRequest request = new SimpleHttpRequestImpl().setURL("http://timd.cn/");
         scheduler.submitRequest(request);
         scheduler.start();

@@ -6,5 +6,5 @@ public interface IHttpResponse extends IResponse {
     IHttpResponse setStatusCode(int statusCode);
     int getStatusCode();
     Map<String, String> getHeaders();
-    IHttpResponse setHeader(String header, String value);
+    IHttpResponse addHeader(String header, String value);
 }

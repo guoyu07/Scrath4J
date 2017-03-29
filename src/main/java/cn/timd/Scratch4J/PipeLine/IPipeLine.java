@@ -1,6 +1,5 @@
 package cn.timd.Scratch4J.PipeLine;
 
-import cn.timd.Scratch4J.Item.IItem;
 import cn.timd.Scratch4J.Request.IRequest;
 import cn.timd.Scratch4J.Response.IResponse;
 

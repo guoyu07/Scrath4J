@@ -1,11 +1,13 @@
-package cn.timd.Scratch4J.ParserFacade;
+package cn.timd.Scratch4J.Facade;
 
 import cn.timd.Scratch4J.Parser.IParser;
 import cn.timd.Scratch4J.PipeLine.IPipeLine;
 import cn.timd.Scratch4J.Request.IRequest;
 import cn.timd.Scratch4J.Response.IResponse;
 
-public interface IParserFacade {
+import java.util.List;
+
+public interface IFacade {
     Class<? extends IParser> getParserClass(IRequest request, IResponse response);
-    Class<? extends IPipeLine> getPipeLine(IRequest request, IResponse response);
+    Class<? extends IPipeLine> getPipeLineClass(IRequest request, IResponse response, List<?> items);
 }

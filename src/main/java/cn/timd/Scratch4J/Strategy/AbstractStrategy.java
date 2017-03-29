@@ -1,19 +1,19 @@
 package cn.timd.Scratch4J.Strategy;
 
-import cn.timd.Scratch4J.ParserFacade.IParserFacade;
-import cn.timd.Scratch4J.ParserFacade.impl.DefaultParserFacadeImpl;
+import cn.timd.Scratch4J.Facade.IFacade;
+import cn.timd.Scratch4J.Facade.impl.DefaultFacadeImpl;
 
 public abstract class AbstractStrategy {
-    private IParserFacade facade = new DefaultParserFacadeImpl();
+    private IFacade facade = new DefaultFacadeImpl();
     private int maxFailureCount = 3;
     // 0 means infinite
-    private int maxDepth = 0;
+    private int maxDepth = 10;
 
-    public IParserFacade getFacade() {
+    public IFacade getFacade() {
         return facade;
     }
 
-    public void setFacade(IParserFacade facade) {
+    public void setFacade(IFacade facade) {
         this.facade = facade;
     }
 

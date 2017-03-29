@@ -7,8 +7,8 @@ public interface IResponse {
 
     IResponse setResponseContent(byte[] bytes);
     byte[] getResponseContent();
-    Class<?> getException();
-    IResponse setException(Class<?> exception);
+    Throwable getException();
+    IResponse setException(Throwable exception);
 
     boolean isRetry();
     IResponse setRetry(boolean retry);

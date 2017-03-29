@@ -10,7 +10,7 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
     private boolean successful = true;
     private Map<String, String> headers = new HashMap<String, String>();
     private int statusCode = 200;
-    private Class<?> exception = null;
+    private Throwable exception = null;
     private byte[] responseContent = null;
     private boolean retry = true;
 
@@ -28,12 +28,11 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
         return successful;
     }
 
-
     public Map<String, String> getHeaders() {
         return headers;
     }
 
-    public SimpleHttpResponseImpl setHeader(String header, String value) {
+    public SimpleHttpResponseImpl addHeader(String header, String value) {
         headers.put(header, value);
         return this;
     }
@@ -47,11 +46,11 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
         return statusCode;
     }
 
-    public Class<?> getException() {
+    public Throwable getException() {
         return exception;
     }
 
-    public SimpleHttpResponseImpl setException(Class<?> exception) {
+    public SimpleHttpResponseImpl setException(Throwable exception) {
         this.exception = exception;
         return this;
     }
@@ -81,7 +80,6 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
                 ", headers=" + headers +
                 ", statusCode=" + statusCode +
                 ", exception=" + exception +
-                ", responseContent=" + Arrays.toString(responseContent) +
                 ", retry=" + retry +
                 '}';
     }
