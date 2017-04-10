@@ -18,7 +18,7 @@ public abstract class AbstractStrategy {
     private int maxPoolSize = (int)Math.pow(Runtime.getRuntime().availableProcessors(), 2);
     private int keepAliveTimeMS = 10000;
     private BlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<Runnable>(100);
-    private RejectedExecutionHandler handler = new ThreadPoolExecutor.DiscardPolicy();
+    private RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
 
     public int getMaxFailureCount() {
         return maxFailureCount;
