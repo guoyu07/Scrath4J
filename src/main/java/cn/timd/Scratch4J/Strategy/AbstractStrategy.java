@@ -1,35 +1,54 @@
 package cn.timd.Scratch4J.Strategy;
 
-import cn.timd.Scratch4J.Facade.IFacade;
-import cn.timd.Scratch4J.Facade.impl.DefaultFacadeImpl;
+import cn.timd.Scratch4J.Facade;
+import cn.timd.Scratch4J.FacadeImpl.DefaultFacade;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public abstract class AbstractStrategy {
-    private IFacade facade = new DefaultFacadeImpl();
+    private Facade facade = new DefaultFacade();
     private int maxFailureCount = 3;
     // 0 means infinite
     private int maxDepth = 10;
 
-    public IFacade getFacade() {
-        return facade;
-    }
+    private int corePoolSize = 2 * Runtime.getRuntime().availableProcessors() + 1;
+    private int maxPoolSize = (int)Math.pow(Runtime.getRuntime().availableProcessors(), 2);
+    private int keepAliveTimeMS = 10000;
+    private BlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<Runnable>(100);
+    private RejectedExecutionHandler handler = new ThreadPoolExecutor.DiscardPolicy();
 
-    public void setFacade(IFacade facade) {
-        this.facade = facade;
+    public Facade getFacade() {
+        return facade;
     }
 
     public int getMaxFailureCount() {
         return maxFailureCount;
     }
 
-    public void setMaxFailureCount(int maxFailureCount) {
-        this.maxFailureCount = maxFailureCount;
-    }
-
     public int getMaxDepth() {
         return maxDepth;
     }
 
-    public void setMaxDepth(int maxDepth) {
-        this.maxDepth = maxDepth;
+    public int getCorePoolSize() {
+        return corePoolSize;
+    }
+
+    public int getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    public int getKeepAliveTimeMS() {
+        return keepAliveTimeMS;
+    }
+
+    public BlockingQueue<Runnable> getBlockingQueue() {
+        return blockingQueue;
+    }
+
+    public RejectedExecutionHandler getHandler() {
+        return handler;
     }
 }
