@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleHttpRequest implements HttpRequest {
-    private Class<? extends Downloader> downloader = SimpleHttpDownloader.class;
+    private Downloader downloader = new SimpleHttpDownloader();
     private int depth = 1;
     private Map<String, String> headers = new HashMap<String, String>();
     private String URL = null;
@@ -17,11 +17,11 @@ public class SimpleHttpRequest implements HttpRequest {
     private byte[] requestContent = null;
     private int failureCount = 0;
 
-    public Class<? extends Downloader> getDownloader() {
+    public Downloader getDownloader() {
         return downloader;
     }
 
-    public SimpleHttpRequest setDownloader(Class<? extends Downloader> downloader) {
+    public SimpleHttpRequest setDownloader(Downloader downloader) {
         this.downloader = downloader;
         return this;
     }
