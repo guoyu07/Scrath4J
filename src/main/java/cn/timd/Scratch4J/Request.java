@@ -10,6 +10,6 @@ public interface Request {
     int getDepth();
     Request setDepth(int depth);
 
-    Request setDownloader(Class<? extends Downloader> downloader);
-    Class<? extends Downloader> getDownloader();
+    Request setDownloader(Downloader downloader);
+    Downloader getDownloader();
 }
