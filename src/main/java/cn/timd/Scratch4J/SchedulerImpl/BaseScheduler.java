@@ -60,36 +60,43 @@ public class BaseScheduler implements Scheduler {
         return true;
     }
 
+    private class CustomRunnable implements Runnable {
+        private Request request;
+
+        CustomRunnable(Request request) {
+            super();
+            this.request = request;
+        }
+
+        public void run() {
+            try {
+                mainWorkFlow(request);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public void start() {
         final ThreadPoolExecutor executor = new ThreadPoolExecutor(
                 strategy.getCorePoolSize(), strategy.getMaxPoolSize(),
                 strategy.getKeepAliveTimeMS(), TimeUnit.MILLISECONDS,
                 strategy.getBlockingQueue(), strategy.getHandler());
-        final Request[] request = new Request[1];
+        Request request;
 
-        while (executor.getActiveCount() != 0 || !requests.isEmpty()) {
-            if (executor.getActiveCount() == executor.getMaximumPoolSize() ||
-                    requests.isEmpty())
-                try {
-                    Thread.sleep(1);
-                    continue;
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                    break;
-                }
+        while (executor.getActiveCount() > 0 || !requests.isEmpty()) {
+            if (executor.getActiveCount() < executor.getMaximumPoolSize() && requests.size() > 0) {
+                request = requests.remove();
+                if (toBeContinue(request))
+                    executor.execute(new CustomRunnable(request));
+            }
 
-            request[0] = requests.remove();
-            if (!toBeContinue(request[0]))
-                continue;
-            executor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        mainWorkFlow(request[0]);
-                    } catch (Exception ex)  {
-                        ex.printStackTrace();
-                    }
-                }
-            });
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+                break;
+            }
         }
 
         executor.shutdown();
