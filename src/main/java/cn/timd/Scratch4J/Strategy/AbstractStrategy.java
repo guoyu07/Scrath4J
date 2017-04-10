@@ -1,7 +1,9 @@
 package cn.timd.Scratch4J.Strategy;
 
-import cn.timd.Scratch4J.Facade;
-import cn.timd.Scratch4J.FacadeImpl.DefaultFacade;
+import cn.timd.Scratch4J.Parser;
+import cn.timd.Scratch4J.ParserImpl.DefaultParser;
+import cn.timd.Scratch4J.PipeLine;
+import cn.timd.Scratch4J.PipeLineImpl.DefaultPipeLine;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -9,10 +11,10 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public abstract class AbstractStrategy {
-    private Facade facade = new DefaultFacade();
     private int maxFailureCount = 3;
-    // 0 means infinite
     private int maxDepth = 10;
+    private Parser parser = new DefaultParser();
+    private PipeLine pipeLine = new DefaultPipeLine();
 
     private int corePoolSize = 2 * Runtime.getRuntime().availableProcessors() + 1;
     private int maxPoolSize = (int)Math.pow(Runtime.getRuntime().availableProcessors(), 2);
@@ -20,16 +22,20 @@ public abstract class AbstractStrategy {
     private BlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<Runnable>(100);
     private RejectedExecutionHandler handler = new ThreadPoolExecutor.DiscardPolicy();
 
-    public Facade getFacade() {
-        return facade;
-    }
-
     public int getMaxFailureCount() {
         return maxFailureCount;
     }
 
     public int getMaxDepth() {
         return maxDepth;
+    }
+
+    public Parser getParser() {
+        return parser;
+    }
+
+    public PipeLine getPipeLine() {
+        return pipeLine;
     }
 
     public int getCorePoolSize() {
