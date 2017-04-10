@@ -7,7 +7,7 @@ import cn.timd.Scratch4J.PipeLine;
 import cn.timd.Scratch4J.Request;
 import cn.timd.Scratch4J.Response;
 import cn.timd.Scratch4J.Scheduler;
-import cn.timd.Scratch4J.Strategy.AbstractStrategy;
+import cn.timd.Scratch4J.AbstractStrategy;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
