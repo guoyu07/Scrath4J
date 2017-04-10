@@ -1,4 +1,4 @@
-package cn.timd.Scratch4J.Parser.impl;
+package cn.timd.Scratch4J.ParserImpl;
 
 import java.util.Arrays;
 
