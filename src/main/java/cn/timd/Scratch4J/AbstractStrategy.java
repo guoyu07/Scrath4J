@@ -1,8 +1,6 @@
-package cn.timd.Scratch4J.Strategy;
+package cn.timd.Scratch4J;
 
-import cn.timd.Scratch4J.Parser;
 import cn.timd.Scratch4J.ParserImpl.DefaultParser;
-import cn.timd.Scratch4J.PipeLine;
 import cn.timd.Scratch4J.PipeLineImpl.DefaultPipeLine;
 
 import java.util.concurrent.ArrayBlockingQueue;
