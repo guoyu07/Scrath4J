@@ -1,24 +1,24 @@
-package cn.timd.Scratch4J.Downloader.impl;
+package cn.timd.Scratch4J.DownloaderImpl;
 
-import cn.timd.Scratch4J.Downloader.IDownloader;
-import cn.timd.Scratch4J.Request.IHttpRequest;
-import cn.timd.Scratch4J.Request.IRequest;
-import cn.timd.Scratch4J.Response.IHttpResponse;
-import cn.timd.Scratch4J.Response.IResponse;
-import cn.timd.Scratch4J.Response.impl.SimpleHttpResponseImpl;
+import cn.timd.Scratch4J.Downloader;
+import cn.timd.Scratch4J.HttpRequest;
+import cn.timd.Scratch4J.Request;
+import cn.timd.Scratch4J.HttpResponse;
+import cn.timd.Scratch4J.Response;
+import cn.timd.Scratch4J.ResponseImpl.SimpleHttpResponse;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class SimpleHttpDownloaderImpl implements IDownloader {
+public class SimpleHttpDownloader implements Downloader {
     private static final OkHttpClient client = new OkHttpClient();
 
     static {
         //// TODO: 2017/3/29 configure `client` such as cookie, cache, timeout and so on
     }
 
-    private void convertResponse(Response okHttpResponse, IHttpResponse httpResponse)
+    private void convertResponse(okhttp3.Response okHttpResponse, HttpResponse httpResponse)
             throws IOException {
         int statusCode = okHttpResponse.code();
         httpResponse.setStatusCode(statusCode).markAsSuccess();
@@ -28,6 +28,7 @@ public class SimpleHttpDownloaderImpl implements IDownloader {
             httpResponse.addHeader(header, headers.get(header));
 
         httpResponse.setResponseContent(okHttpResponse.body().bytes());
+        // // TODO: 2017/4/10 set encoding too
 
         if (!okHttpResponse.isSuccessful()) {
             httpResponse.markAsFailure().setRetry(false);
@@ -36,12 +37,12 @@ public class SimpleHttpDownloaderImpl implements IDownloader {
         }
     }
 
-    public IResponse download(IRequest request)
+    public Response download(Request request)
             throws ClassCastException, NullPointerException {
-        IHttpRequest httpRequest = (IHttpRequest) request;
-        IHttpResponse httpResponse = new SimpleHttpResponseImpl();
+        HttpRequest httpRequest = (HttpRequest) request;
+        HttpResponse httpResponse = new SimpleHttpResponse();
 
-        Request.Builder requestBuilder = new Request.Builder()
+        okhttp3.Request.Builder requestBuilder = new okhttp3.Request.Builder()
                 .url(httpRequest.getURL());
 
         String contentType = "application/octet-stream";
@@ -64,11 +65,11 @@ public class SimpleHttpDownloaderImpl implements IDownloader {
                     MediaType.parse(contentType), httpRequest.getRequestContent()));
         else
             requestBuilder.get();
-        Request okHttpRequest = requestBuilder.build();
+        okhttp3.Request okHttpRequest = requestBuilder.build();
 
         final Call call = client.newCall(okHttpRequest);
         try {
-            Response okHttpResponse = call.execute();
+            okhttp3.Response okHttpResponse = call.execute();
             convertResponse(okHttpResponse, httpResponse);
         } catch (IOException ex) {
             httpResponse.setException(ex).markAsFailure().setRetry(true);
