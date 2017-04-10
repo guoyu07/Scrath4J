@@ -1,12 +1,11 @@
-package cn.timd.Scratch4J.Response.impl;
+package cn.timd.Scratch4J.ResponseImpl;
 
-import cn.timd.Scratch4J.Response.IHttpResponse;
+import cn.timd.Scratch4J.HttpResponse;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SimpleHttpResponseImpl implements IHttpResponse {
+public class SimpleHttpResponse implements HttpResponse {
     private boolean successful = true;
     private Map<String, String> headers = new HashMap<String, String>();
     private int statusCode = 200;
@@ -14,12 +13,12 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
     private byte[] responseContent = null;
     private boolean retry = true;
 
-    public SimpleHttpResponseImpl markAsFailure() {
+    public SimpleHttpResponse markAsFailure() {
         successful = false;
         return this;
     }
 
-    public SimpleHttpResponseImpl markAsSuccess() {
+    public SimpleHttpResponse markAsSuccess() {
         successful = true;
         return this;
     }
@@ -32,12 +31,12 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
         return headers;
     }
 
-    public SimpleHttpResponseImpl addHeader(String header, String value) {
+    public SimpleHttpResponse addHeader(String header, String value) {
         headers.put(header, value);
         return this;
     }
 
-    public SimpleHttpResponseImpl setStatusCode(int statusCode) {
+    public SimpleHttpResponse setStatusCode(int statusCode) {
         this.statusCode = statusCode;
         return this;
     }
@@ -50,7 +49,7 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
         return exception;
     }
 
-    public SimpleHttpResponseImpl setException(Throwable exception) {
+    public SimpleHttpResponse setException(Throwable exception) {
         this.exception = exception;
         return this;
     }
@@ -59,7 +58,7 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
         return responseContent;
     }
 
-    public SimpleHttpResponseImpl setResponseContent(byte[] responseContent) {
+    public SimpleHttpResponse setResponseContent(byte[] responseContent) {
         this.responseContent = responseContent;
         return this;
     }
@@ -68,14 +67,14 @@ public class SimpleHttpResponseImpl implements IHttpResponse {
         return retry;
     }
 
-    public SimpleHttpResponseImpl setRetry(boolean retry) {
+    public SimpleHttpResponse setRetry(boolean retry) {
         this.retry = retry;
         return this;
     }
 
     @Override
     public String toString() {
-        return "SimpleHttpResponseImpl{" +
+        return "SimpleHttpResponse{" +
                 "successful=" + successful +
                 ", headers=" + headers +
                 ", statusCode=" + statusCode +
