@@ -8,12 +8,14 @@ import cn.timd.Scratch4J.Request;
 import cn.timd.Scratch4J.Response;
 import cn.timd.Scratch4J.Scheduler;
 import cn.timd.Scratch4J.AbstractStrategy;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class BaseScheduler implements Scheduler {
     private final Queue<Request> requests = new LinkedBlockingQueue<Request>();
     private AbstractStrategy strategy = new AbstractStrategy() {};
@@ -82,11 +84,13 @@ public class BaseScheduler implements Scheduler {
                 strategy.getCorePoolSize(), strategy.getMaxPoolSize(),
                 strategy.getKeepAliveTimeMS(), TimeUnit.MILLISECONDS,
                 strategy.getBlockingQueue(), strategy.getHandler());
+        log.debug("ThreadPoolExecutor is created");
         Request request;
 
         while (executor.getActiveCount() > 0 || !requests.isEmpty()) {
             if (executor.getActiveCount() < executor.getMaximumPoolSize() && requests.size() > 0) {
                 request = requests.remove();
+                log.debug("request is: " + request.toString());
                 if (toBeContinue(request))
                     executor.execute(new CustomRunnable(request));
             }
@@ -99,6 +103,7 @@ public class BaseScheduler implements Scheduler {
             }
         }
 
+        log.debug("ThreadPoolExecutor is shutdown");
         executor.shutdown();
     }
 }

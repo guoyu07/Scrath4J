@@ -6,11 +6,13 @@ import cn.timd.Scratch4J.Request;
 import cn.timd.Scratch4J.HttpResponse;
 import cn.timd.Scratch4J.Response;
 import cn.timd.Scratch4J.ResponseImpl.SimpleHttpResponse;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.util.Map;
 
+@Slf4j
 public class SimpleHttpDownloader implements Downloader {
     private static final OkHttpClient client = new OkHttpClient();
 
@@ -31,6 +33,7 @@ public class SimpleHttpDownloader implements Downloader {
         // // TODO: 2017/4/10 set encoding too
 
         if (!okHttpResponse.isSuccessful()) {
+            log.warn("status code is: " + okHttpResponse.code());
             httpResponse.markAsFailure().setRetry(false);
             if (statusCode == 502 || statusCode == 503 || statusCode == 504)
                 httpResponse.setRetry(true);
@@ -72,6 +75,7 @@ public class SimpleHttpDownloader implements Downloader {
             okhttp3.Response okHttpResponse = call.execute();
             convertResponse(okHttpResponse, httpResponse);
         } catch (IOException ex) {
+            log.error(ex.getMessage());
             httpResponse.setException(ex).markAsFailure().setRetry(true);
         }
 
